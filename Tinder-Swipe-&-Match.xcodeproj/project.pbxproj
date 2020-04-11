@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		324CD70C2441DC130058A46E /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 324CD70B2441DC130058A46E /* User.swift */; };
 		324CD7112441F7B10058A46E /* CardViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 324CD7102441F7B10058A46E /* CardViewModel.swift */; };
+		324CD7132442395D0058A46E /* Advertiser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 324CD7122442395D0058A46E /* Advertiser.swift */; };
 		324ECE51243CFE1A00EFE2C7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 324ECE50243CFE1A00EFE2C7 /* AppDelegate.swift */; };
 		324ECE53243CFE1A00EFE2C7 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 324ECE52243CFE1A00EFE2C7 /* SceneDelegate.swift */; };
 		324ECE55243CFE1A00EFE2C7 /* HomeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 324ECE54243CFE1A00EFE2C7 /* HomeController.swift */; };
@@ -24,6 +25,7 @@
 /* Begin PBXFileReference section */
 		324CD70B2441DC130058A46E /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		324CD7102441F7B10058A46E /* CardViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardViewModel.swift; sourceTree = "<group>"; };
+		324CD7122442395D0058A46E /* Advertiser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Advertiser.swift; sourceTree = "<group>"; };
 		324ECE4D243CFE1A00EFE2C7 /* Tinder-Swipe-&-Match.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Tinder-Swipe-&-Match.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		324ECE50243CFE1A00EFE2C7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		324ECE52243CFE1A00EFE2C7 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -53,6 +55,7 @@
 			isa = PBXGroup;
 			children = (
 				324CD70B2441DC130058A46E /* User.swift */,
+				324CD7122442395D0058A46E /* Advertiser.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -203,6 +206,7 @@
 				324CD70C2441DC130058A46E /* User.swift in Sources */,
 				324ECE6B243D164B00EFE2C7 /* TopNavigationStackView.swift in Sources */,
 				324ECE66243D019300EFE2C7 /* Extensions+UIView.swift in Sources */,
+				324CD7132442395D0058A46E /* Advertiser.swift in Sources */,
 				324ECE53243CFE1A00EFE2C7 /* SceneDelegate.swift in Sources */,
 				324CD7112441F7B10058A46E /* CardViewModel.swift in Sources */,
 			);
