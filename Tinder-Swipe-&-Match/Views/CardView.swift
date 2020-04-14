@@ -12,14 +12,25 @@ class CardView: UIView {
     
     var cardViewModel: CardViewModel! {
         didSet {
-            imageView.image = UIImage(named: cardViewModel.imageName)
+            // accessing index 0 will crash if imageNames.count == 0
+            let imageName = cardViewModel.imageNames.first ?? ""
+            imageView.image = UIImage(named: imageName)
             informationLabel.attributedText = cardViewModel.attributedString
             informationLabel.textAlignment = cardViewModel.textAlignment
+            
+            // some dummy bars for now
+            (0..<cardViewModel.imageNames.count).forEach { (_) in
+                let barView = UIView()
+                barView.backgroundColor = barDeselectedColor
+                barsStackView.addArrangedSubview(barView)
+            }
+            barsStackView.arrangedSubviews.first?.backgroundColor = .white
         }
     }
     
     // Incapsulation
     fileprivate let imageView = UIImageView(image: #imageLiteral(resourceName: "lady5c"))
+    fileprivate let gradientLayer = CAGradientLayer()
     fileprivate let informationLabel = UILabel()
     
     // Configurations
@@ -27,6 +38,36 @@ class CardView: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+        setupLayout()
+        
+        let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePan))
+        addGestureRecognizer(panGesture)
+        addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleTap)))
+    }
+    
+    var imageIndex = 0
+    fileprivate let barDeselectedColor = UIColor(white: 0, alpha: 0.1)
+    
+    // View additional images
+    @objc fileprivate func handleTap(gesture: UITapGestureRecognizer) {
+        let tapLocation = gesture.location(in: nil)
+        let shouldAdvanceNextPhoto = tapLocation.x > frame.width / 2 ? true : false
+        if shouldAdvanceNextPhoto {
+            imageIndex = min(imageIndex + 1, cardViewModel.imageNames.count - 1)
+        } else {
+            imageIndex = max(0, imageIndex - 1)
+        }
+        
+        let imageName = cardViewModel.imageNames[imageIndex]
+        imageView.image = UIImage(named: imageName)
+        barsStackView.arrangedSubviews.forEach { (v) in
+            v.backgroundColor = barDeselectedColor
+        }
+        barsStackView.arrangedSubviews[imageIndex].backgroundColor = .white
+        
+    }
+
+    fileprivate func setupLayout() {
         // custom drawing code
         layer.cornerRadius = 10
         clipsToBounds = true
@@ -35,43 +76,73 @@ class CardView: UIView {
         addSubview(imageView)
         imageView.fillSuperview()
         
+        setupBarsStackView()
+        
+        // Add a gradient layer somehow
+        setupGradientLayer()
+        
         addSubview(informationLabel)
         
         informationLabel.anchor(top: nil, leading: leadingAnchor, bottom: bottomAnchor, trailing: trailingAnchor, padding: .init(top: 0, left: 16, bottom: 16, right: 16))
         
-        informationLabel.text = "TEST NAME TEST NAME"
         informationLabel.textColor = .white
-        informationLabel.font = UIFont.systemFont(ofSize: 34, weight: .heavy)
         informationLabel.numberOfLines = 0
+    }
+    
+    fileprivate let barsStackView = UIStackView()
+    
+    fileprivate func setupBarsStackView() {
+        addSubview(barsStackView)
+        barsStackView.anchor(top: topAnchor, leading: leadingAnchor, bottom: nil, trailing: trailingAnchor, padding: .init(top: 8, left: 8, bottom: 0, right: 8), size: .init(width: 0, height: 4))
         
-        let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePan))
-        addGestureRecognizer(panGesture)
+        barsStackView.spacing = 4
+        barsStackView.distribution = .fillEqually
+    }
+    
+    fileprivate func setupGradientLayer() {
+        // how we can draw a gradient with Swift
+        gradientLayer.colors = [UIColor.clear.cgColor, UIColor.black.cgColor ]
+        gradientLayer.locations = [0.5, 1.1]
+        // self frame is actually zero frame
+        // gradientLayer.frame = CGRect(x: 0, y: 0, width: 300, height: 400)
+        
+        layer.addSublayer(gradientLayer)
+    }
+    
+    override func layoutSubviews() {
+         // in here ypu know what your CardView frame will be
+        gradientLayer.frame = self.frame
     }
     
     // Drag & Drop Effect
     @objc fileprivate func handlePan(gesture: UIPanGestureRecognizer) {
-        switch gesture.state {
-        case .changed:
-            handleChanged(gesture)
-        case .ended:
-            handleEnded(gesture: gesture)
-        default:
-            ()
+            switch gesture.state {
+            case .began:
+                // Bug fixes animation
+                superview?.subviews.forEach({ (subview) in
+                    subview.layer.removeAllAnimations()
+                })
+            case .changed:
+                handleChanged(gesture)
+            case .ended:
+                handleEnded(gesture: gesture)
+            default:
+                ()
+            }
         }
-    }
-    
-    fileprivate func handleChanged(_ gesture: UIPanGestureRecognizer) {
-        let translation = gesture.translation(in: nil)
-        // rotation
-        // some not that scary math here to convert radians to degrees
-        let degrees: CGFloat = translation.x / 20
-        let angle = degrees * .pi / 180
         
-        let rotationalTransformation = CGAffineTransform(rotationAngle: angle)
-        self.transform = rotationalTransformation.translatedBy(x: translation.x, y: translation.y)
-    }
-    
-    fileprivate func handleEnded(gesture: UIPanGestureRecognizer) {
+        fileprivate func handleChanged(_ gesture: UIPanGestureRecognizer) {
+            let translation = gesture.translation(in: nil)
+            // rotation
+            // some not that scary math here to convert radians to degrees
+            let degrees: CGFloat = translation.x / 20
+            let angle = degrees * .pi / 180
+            
+            let rotationalTransformation = CGAffineTransform(rotationAngle: angle)
+            self.transform = rotationalTransformation.translatedBy(x: translation.x, y: translation.y)
+        }
+        
+        fileprivate func handleEnded(gesture: UIPanGestureRecognizer) {
             let translationDirection: CGFloat = gesture.translation(in: nil).x > 0 ? 1 : -1
             let shouldDismissCard = abs(gesture.translation(in: nil).x) > threshold
             
@@ -87,13 +158,12 @@ class CardView: UIView {
                 if shouldDismissCard {
                     self.removeFromSuperview()
                 }
-                
-//                self.frame = CGRect(x: 0, y: 0, width: self.superview!.frame.width, height: self.superview!.frame.height)
+    //            self.frame = CGRect(x: 0, y: 0, width: self.superview!.frame.width, height: self.superview!.frame.height)
             }
         }
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        
+        required init?(coder aDecoder: NSCoder) {
+            fatalError("init(coder:) has not been implemented")
+        }
+
     }
-    
-}
