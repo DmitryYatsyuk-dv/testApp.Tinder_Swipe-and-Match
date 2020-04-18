@@ -10,9 +10,8 @@ import UIKit
 
 class RegistrationController: UIViewController {
     
-    // UI Components
+    //MARK: UI Components
     let selectPhotoButton: UIButton = {
-        
         let button = UIButton(type: .system)
         button.setTitle("Select Photo", for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 32, weight: .heavy)
@@ -44,19 +43,80 @@ class RegistrationController: UIViewController {
         return textField
     }()
     
+    let registerButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("Register", for: .normal)
+        button.setTitleColor(.white, for: .normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .heavy)
+        button.backgroundColor = #colorLiteral(red: 0.7014197335, green: 0.05066127595, blue: 0.1985741373, alpha: 1)
+        button.heightAnchor.constraint(equalToConstant: 44).isActive = true
+        button.layer.cornerRadius = 22
+        return button
+    }()
+    
     //MARK: View Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
         setupGradientLayer()
-        view.backgroundColor = .systemPurple
+        setupLayout()
+        setupNotificationObserver()
+        setupTapGesture()
+    }
+
+    //MARK: Private
+    
+    fileprivate func setupTapGesture() {
+        view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handlehandleTapDismiss)))
+    }
+    
+    @objc fileprivate func handlehandleTapDismiss() {
+        self.view.endEditing(true) // dismisses keyboard
+    }
+    
+    
+    fileprivate func setupNotificationObserver() {
+        NotificationCenter.default.addObserver(self, selector: #selector(handleKeyboardShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(handleKeyboardHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        NotificationCenter.default.removeObserver(self) // You'll have a retain cycle
+    }
+    
+    @objc fileprivate func handleKeyboardHide() {
+        UIView.animate(withDuration: 0.7, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+            self.view.transform = .identity
+        })
+    }
+    
+    @objc fileprivate func handleKeyboardShow(notification: Notification) {
         
-        let stackView = UIStackView(arrangedSubviews: [
-            selectPhotoButton,
-            fullNameTextField,
-            emailTextField,
-            passwordTextFIeld
-        ])
+        // how to figure out how tall the keyboard actually is
+        guard let value = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue else { return }
+        let keyboardFrame = value.cgRectValue
+//        print(keyboardFrame)
+        
+        // let's try to figure out how tall the gap is from the register buttom to the bottom of the screen
+        let bottomSpace = view.frame.height - stackView.frame.origin.y - stackView.frame.height
+//        print(bottomSpace)
+        
+        let difference = keyboardFrame.height - bottomSpace
+        self.view.transform = CGAffineTransform(translationX: 0, y: -difference - 8)
+    }
+    
+
+    lazy var stackView = UIStackView(arrangedSubviews: [
+        selectPhotoButton,
+        fullNameTextField,
+        emailTextField,
+        passwordTextFIeld,
+        registerButton
+    ])
+    
+    fileprivate func setupLayout() {
+    
         view.addSubview(stackView)
         stackView.axis = .vertical
         stackView.spacing = 8
@@ -74,5 +134,4 @@ class RegistrationController: UIViewController {
         view.layer.addSublayer(gradienLayer)
         gradienLayer.frame = view.bounds
     }
-    
 }
