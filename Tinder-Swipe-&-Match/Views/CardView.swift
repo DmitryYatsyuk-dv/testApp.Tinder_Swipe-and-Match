@@ -17,6 +17,7 @@ class CardView: UIView {
             imageView.image = UIImage(named: imageName)
             informationLabel.attributedText = cardViewModel.attributedString
             informationLabel.textAlignment = cardViewModel.textAlignment
+
             
             // some dummy bars for now
             (0..<cardViewModel.imageNames.count).forEach { (_) in
@@ -25,6 +26,20 @@ class CardView: UIView {
                 barsStackView.addArrangedSubview(barView)
             }
             barsStackView.arrangedSubviews.first?.backgroundColor = .white
+            
+            setupImageIndexObserver()
+        }
+    }
+    
+    fileprivate func setupImageIndexObserver() {
+        cardViewModel.imageIndexObserver = { [weak self] (index, image) in
+            print("Changing photo from view model")
+            self?.imageView.image = image
+            
+            self?.barsStackView.arrangedSubviews.forEach ({ (v) in
+                v.backgroundColor = self?.barDeselectedColor
+            })
+            self?.barsStackView.arrangedSubviews[index].backgroundColor = .white
         }
     }
     
@@ -44,29 +59,22 @@ class CardView: UIView {
         addGestureRecognizer(panGesture)
         addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleTap)))
     }
-    
-    var imageIndex = 0
+
     fileprivate let barDeselectedColor = UIColor(white: 0, alpha: 0.1)
     
     // View additional images
     @objc fileprivate func handleTap(gesture: UITapGestureRecognizer) {
         let tapLocation = gesture.location(in: nil)
         let shouldAdvanceNextPhoto = tapLocation.x > frame.width / 2 ? true : false
+        
         if shouldAdvanceNextPhoto {
-            imageIndex = min(imageIndex + 1, cardViewModel.imageNames.count - 1)
+            cardViewModel.advanceToNextPhoto()
         } else {
-            imageIndex = max(0, imageIndex - 1)
+            cardViewModel.goToPreviousPhoto()
         }
-        
-        let imageName = cardViewModel.imageNames[imageIndex]
-        imageView.image = UIImage(named: imageName)
-        barsStackView.arrangedSubviews.forEach { (v) in
-            v.backgroundColor = barDeselectedColor
-        }
-        barsStackView.arrangedSubviews[imageIndex].backgroundColor = .white
-        
     }
-
+    
+    //MARK: Setup Layout
     fileprivate func setupLayout() {
         // custom drawing code
         layer.cornerRadius = 10
@@ -114,6 +122,7 @@ class CardView: UIView {
         gradientLayer.frame = self.frame
     }
     
+    //MARK: Handle(pan, changed, ended)
     // Drag & Drop Effect
     @objc fileprivate func handlePan(gesture: UIPanGestureRecognizer) {
             switch gesture.state {
