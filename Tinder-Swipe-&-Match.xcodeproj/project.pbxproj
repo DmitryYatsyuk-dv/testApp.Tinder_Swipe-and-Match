@@ -21,6 +21,7 @@
 		324ECE66243D019300EFE2C7 /* Extensions+UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 324ECE65243D019300EFE2C7 /* Extensions+UIView.swift */; };
 		324ECE69243D0CE700EFE2C7 /* HomeBottomControlsStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 324ECE68243D0CE700EFE2C7 /* HomeBottomControlsStackView.swift */; };
 		324ECE6B243D164B00EFE2C7 /* TopNavigationStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 324ECE6A243D164B00EFE2C7 /* TopNavigationStackView.swift */; };
+		325F8B42244D91C80074AFDB /* RegistrationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 325F8B41244D91C80074AFDB /* RegistrationViewModel.swift */; };
 		32DBAB41243F74FE00B044B8 /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32DBAB40243F74FE00B044B8 /* CardView.swift */; };
 /* End PBXBuildFile section */
 
@@ -41,6 +42,7 @@
 		324ECE65243D019300EFE2C7 /* Extensions+UIView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Extensions+UIView.swift"; sourceTree = "<group>"; };
 		324ECE68243D0CE700EFE2C7 /* HomeBottomControlsStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeBottomControlsStackView.swift; sourceTree = "<group>"; };
 		324ECE6A243D164B00EFE2C7 /* TopNavigationStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopNavigationStackView.swift; sourceTree = "<group>"; };
+		325F8B41244D91C80074AFDB /* RegistrationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationViewModel.swift; sourceTree = "<group>"; };
 		32DBAB40243F74FE00B044B8 /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -130,6 +132,7 @@
 			children = (
 				324ECE54243CFE1A00EFE2C7 /* HomeController.swift */,
 				322144C0244B4194006DE55A /* RegistrationController.swift */,
+				325F8B41244D91C80074AFDB /* RegistrationViewModel.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -214,6 +217,7 @@
 				322144C1244B4194006DE55A /* RegistrationController.swift in Sources */,
 				324ECE66243D019300EFE2C7 /* Extensions+UIView.swift in Sources */,
 				322144C3244B50DE006DE55A /* CustomTextField.swift in Sources */,
+				325F8B42244D91C80074AFDB /* RegistrationViewModel.swift in Sources */,
 				324CD7132442395D0058A46E /* Advertiser.swift in Sources */,
 				324ECE53243CFE1A00EFE2C7 /* SceneDelegate.swift in Sources */,
 				324CD7112441F7B10058A46E /* CardViewModel.swift in Sources */,
